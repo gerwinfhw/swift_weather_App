@@ -1,0 +1,30 @@
+PODS:
+  - Alamofire (4.9.1)
+  - NVActivityIndicatorView (5.1.1):
+    - NVActivityIndicatorView/Base (= 5.1.1)
+  - NVActivityIndicatorView/Base (5.1.1)
+  - SwiftyJSON (4.3.0)
+  - TimeZoneLocate (0.5.0)
+
+DEPENDENCIES:
+  - Alamofire
+  - NVActivityIndicatorView
+  - SwiftyJSON
+  - TimeZoneLocate
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - NVActivityIndicatorView
+    - SwiftyJSON
+    - TimeZoneLocate
+
+SPEC CHECKSUMS:
+  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
+  NVActivityIndicatorView: 1f6c5687f1171810aa27a3296814dc2d7dec3667
+  SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
+  TimeZoneLocate: 8536d7435a408ac14b6e0190ffcca2c2bb91aff8
+
+PODFILE CHECKSUM: a4ab6784503fded0eaa15603f5bc04542d9a1e0b
+
+COCOAPODS: 1.8.4
