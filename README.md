@@ -1,5 +1,8 @@
 # Weather App
 Swift weather_app
+
+![Demo](https://raw.githubusercontent.com/gerwinfhw/swift_weather_App/main/demo.gif)
+
 ## Build status
 still in progress
 
