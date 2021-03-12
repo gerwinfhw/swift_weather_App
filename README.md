@@ -36,7 +36,7 @@ Run command in your project directory.
 
     $ pod install 
     
-    Open App.xcworkspace in repo and build.
+Open App.xcworkspace in repo and build.
 
 
 ## API Reference
