@@ -8,8 +8,7 @@ still in progress
 
 ## Requirements
 * iOS 13.0+
-* Swift 5+
-
+* Swift 9.3+
 
 ## Tech/framework used
 
@@ -25,17 +24,19 @@ still in progress
 - different backgrounds based on the local time
 - 1 day weather forecast for each city
 - supports the germany language
-
-
-## Missing Features
 - landscape mode
+
+## Missing Features                     
 - current location weather forecast
 - connection to the database to save the cities
 
 
 ## Installation with Cocapods
-    Run $ pod install in your project directory.
-    Open App.xcworkspace and build.
+Run command in your project directory.
+
+    $ pod install 
+    
+    Open App.xcworkspace in repo and build.
 
 
 ## API Reference
@@ -43,7 +44,7 @@ API key for current weather data from: [OpenWeather](https://openweathermap.org)
 (An Account is requried)
 
 ## Tests
-still in progress
+Unit test for the Helper.swift class
 
 ## License
 ©gerwinfhw
