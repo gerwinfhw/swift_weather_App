@@ -16,13 +16,14 @@ class Helper {
     
     static func isDay(localTime:[Int], sunrise:[Int], sunset:[Int]) -> Bool {
         
-        if (localTime[0] > sunrise[0]  || localTime[0] == sunrise[0] && localTime[1] >= sunrise[1] || sunset[0] < sunrise[0]) {
-            if (localTime[0] < sunset[0]
-                || localTime[0] == sunset[0] && localTime[1] <= sunset[1]) {
-                return true
-            }
-            
-            if (sunset[0] >= sunrise[0] && localTime[0] < 23 || sunset[0] < sunrise[0] && localTime[0] < 23 || localTime[0] < sunset[0] || localTime[0] == sunset[0] && localTime[1] <= sunset[1]) {
+        // normal case: local time is higher than sunrise and lower than sunset
+        if ((localTime[0] > sunrise[0] || localTime[0] == sunrise[0] && localTime[1] >= sunrise[1])
+                && localTime[0] < sunset[0] || localTime[0] == sunset[0] && localTime[1] <= sunset[1]) {
+            return true
+        }
+        
+        if (sunset[0] < sunrise[0]) {
+            if (localTime[0] < 23 || localTime[0] < sunset[0] || localTime[0] == sunset[0] && localTime[1] <= sunset[1]) {
                 return true
             }
         }

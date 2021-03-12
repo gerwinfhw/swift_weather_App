@@ -55,12 +55,12 @@ class weather_appTests: XCTestCase {
         XCTAssertTrue(Helper.isDay(localTime: [02,00], sunrise: [11,00], sunset: [03,00]))
     }
     
-    func testHelper_IsDay_sunriseMidnight() {
-        XCTAssertTrue(Helper.isDay(localTime: [02,00], sunrise: [00,00], sunset: [03,00]))
+    func testHelper_IsDay_sunsetIsPastMidnight_3() {
+        XCTAssertTrue(Helper.isDay(localTime: [02,32], sunrise: [11,00], sunset: [02,33]))
     }
     
-    func testHelper_IsDay_sunsetMidnight() {
-        XCTAssertTrue(Helper.isDay(localTime: [02,00], sunrise: [01,00], sunset: [00,00]))
+    func testHelper_IsDay_sunriseMidnight() {
+        XCTAssertTrue(Helper.isDay(localTime: [02,00], sunrise: [00,00], sunset: [03,00]))
     }
     
     func testHelper_isDay_alltheSameTime() {

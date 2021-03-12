@@ -25,9 +25,6 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
         Weather(city: "Texas")
     ]
     
-    
-    var isDay = false
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -55,7 +52,7 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
         let tableViewFooterView = UIView()
         tableViewFooterView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
         
-        let addButton = UIButton(frame: CGRect(x: tableViewFooterView.frame.width-40, y: 10, width: 30, height: 30))
+        let addButton = UIButton(frame: CGRect(x: 10, y: 10, width: 30, height: 30))
         addButton.setTitle("+", for: .normal)
         addButton.backgroundColor = .black
         addButton.layer.cornerRadius = 15.0
@@ -109,6 +106,18 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        /// updates gradients when orientation changed
+        for cell in weatherTableView.visibleCells {
+            for sublayer in cell.layer.sublayers ?? [] where sublayer.name == "gradient"  {
+                sublayer.bounds = cell.bounds
+            }
+        }
+        
+        weatherTableView.reloadData()
+    }
+    
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "weatherCell", for: indexPath) as! WeatherTableViewCell
         let city = weatherList[indexPath.row].city!
@@ -118,40 +127,40 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
             response in
             
             if let responseStr = response.result.value {
-                // convert the response to an JSON object
+                /// convert the response to an JSON object
                 let jsonResponse = JSON(responseStr)
                 
-                // update data with json info
+                /// update data with json info
                 self.weatherList[indexPath.row].updateWith(json: jsonResponse)
                 
                 let weatherWrapper = WeatherWrapper(weather: self.weatherList[indexPath.row])
                 
-                let jsonCoord = jsonResponse["coord"]
-                let lon = jsonCoord["lon"].doubleValue
-                let lat = jsonCoord["lat"].doubleValue
-                
-                let location = CLLocation(latitude: lat, longitude: lon)
-                
-                /// get the time zone of a city and calculate the current time
-                location.timeZone { (tz) -> (Void) in
-                    guard let tz = tz else { return }
-
-                    let timezone = TimeZone.init(identifier: tz.identifier)
-                    let dateFormatter = DateFormatter()
-                    dateFormatter.dateFormat = "HH:mm"
-                    dateFormatter.timeZone = timezone
-                    let currentTimeAtLocation = Helper.convertTimeToArray(time: dateFormatter.string(from: Date()))
+                if weatherWrapper.lat != nil && weatherWrapper.lon != nil {
+                    let location = CLLocation(latitude: weatherWrapper.lat!, longitude: weatherWrapper.lon!)
                     
-                    /// checks is day or night at the location
-                    let isDay = Helper.isDay(localTime: currentTimeAtLocation, sunrise: weatherWrapper.sunriseArray, sunset: weatherWrapper.sunsetArray)
-        
-                    /// set gradient background based on the current time at the location
-                    let gradientLayer = Helper.buildGradientLayer(isDay: isDay, frame: cell.weatherCell.bounds)
-                    cell.layer.insertSublayer(gradientLayer, at:0)
-                    
-                    cell.cityLabel.text = weatherWrapper.city
-                    cell.tempLabel.text = weatherWrapper.temp
+                    /// get the time zone of a city and calculate the current time
+                    location.timeZone { (tz) -> (Void) in
+                        guard let tz = tz else { return }
+                        
+                        let timezone = TimeZone.init(identifier: tz.identifier)
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "HH:mm"
+                        dateFormatter.timeZone = timezone
+                        let currentTimeAtLocation = Helper.convertTimeToArray(time: dateFormatter.string(from: Date()))
+                        
+                        /// checks is day or night at the location
+                        let isDay = Helper.isDay(localTime: currentTimeAtLocation, sunrise: weatherWrapper.sunriseArray, sunset: weatherWrapper.sunsetArray)
+                        
+                        /// set gradient background based on the current time at the location
+                        let gradientLayer = Helper.buildGradientLayer(isDay: isDay, frame: cell.weatherCell.bounds)
+                        gradientLayer.name = "gradient"
+                        
+                        cell.layer.insertSublayer(gradientLayer, at:1)
+                    }
                 }
+                
+                cell.cityLabel.text = weatherWrapper.city
+                cell.tempLabel.text = weatherWrapper.temp
             }
         }
         return cell
@@ -190,10 +199,7 @@ class WeatherViewController: UIViewController, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         weatherList.swapAt(sourceIndexPath.row, destinationIndexPath.row)
     }
-}
-
-
-extension UIViewController {
+    
     /// custom pop up window with text field
     func ask(title: String?, question: String?, placeholder: String?, keyboardType: UIKeyboardType = .default, delegate: @escaping (_ answer: String?) -> Void) {
         let alert = UIAlertController(title: title, message: question, preferredStyle: .alert)
@@ -210,5 +216,5 @@ extension UIViewController {
         })
         present(alert, animated: true, completion: nil)
     }
-    
 }
+

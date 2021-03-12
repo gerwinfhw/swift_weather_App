@@ -23,8 +23,7 @@ class WeatherDetailViewController: UIViewController {
     @IBOutlet weak var humidityLabel: UILabel!
     @IBOutlet weak var sunriseLabel: UILabel!
     @IBOutlet weak var sunsetLabel: UILabel!
-    
-    @IBOutlet var backgroundView: UIView!
+    @IBOutlet weak var backgroundView: UIView!
     
     var weatherWrapper: WeatherWrapper = WeatherWrapper(weather: Weather())
     
@@ -43,14 +42,11 @@ class WeatherDetailViewController: UIViewController {
         sunsetLabel.text = weatherWrapper.sunsetFormatted
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        changeBackgroundToGradients()
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
         
-        super.viewWillAppear(animated)
+        /// updates the background when first time loaded or orientation changed
+        changeBackgroundToGradients()
     }
     
     func changeBackgroundToGradients() {
@@ -71,6 +67,12 @@ class WeatherDetailViewController: UIViewController {
                 
                 /// sets gradient background based on the current time at the location
                 let gradientLayer = Helper.buildGradientLayer(isDay: isDay, frame: self.view.bounds)
+                gradientLayer.name = "gradient"
+                
+                /// delete old gradient background
+                if let oldlayer = self.backgroundView.layer.sublayers?.filter({$0.name == "gradient"}).first {
+                        oldlayer.removeFromSuperlayer()
+                    }
                 
                 self.backgroundView.layer.insertSublayer(gradientLayer, at:0)
             }
